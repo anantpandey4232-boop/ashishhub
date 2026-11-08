@@ -1,4 +1,4 @@
-# AshishHub — Complete Starter App
+AshishHub — Complete Starter App
 
 This project includes the premium dark mobile-friendly frontend, server-side access-key generation/validation, and the Ashish AI chat backend.
 
