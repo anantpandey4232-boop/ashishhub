@@ -39,15 +39,126 @@ footer{text-align:center;color:#9399aa;padding:30px 15px;font-size:12px;line-hei
 </main><footer><b>✨ ASHISHHUB</b><br>Made with ❤️ for learners</footer>
 <nav class="bottom"><a href="#home"><span>🏠</span>Home</a><a href="#platforms"><span>🚀</span>Platforms</a><a href="#ai"><span>🤖</span>Ashish AI</a><a href="#resources"><span>📚</span>Resources</a></nav>
 <script>
-let activeKey="";
-const $=id=>document.getElementById(id);
-function showPlatforms(){ $("keyGate").classList.add("hidden");$("platformList").classList.remove("hidden");$("lockNote").classList.add("hidden"); }
-async function unlock(){const key=$("accessKey").value.trim();$("gateMessage").textContent="Checking key…";try{const r=await fetch("/api/keys/validate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key})});const d=await r.json();if(!r.ok)throw Error(d.error||"Invalid key");activeKey=key;sessionStorage.setItem("ashishhub_key",key);$("gateMessage").textContent="";showPlatforms()}catch(e){$("gateMessage").textContent="❌ "+e.message}}
-$("unlockBtn").onclick=unlock;$("accessKey").addEventListener("keydown",e=>{if(e.key==="Enter")unlock()});
-async function generate(){ $("adminNotice").textContent="Generating…";$("keyResult").classList.add("hidden");try{const r=await fetch("/api/admin/keys",{method:"POST",headers:{"Content-Type":"application/json","x-admin-pin":$("adminPin").value},body:"{}"});const d=await r.json();if(!r.ok)throw Error(d.error||"Could not generate key");$("newKey").textContent=d.key;$("keyResult").classList.remove("hidden");$("adminNotice").textContent="Key created. Copy and share it."; }catch(e){$("adminNotice").textContent="❌ "+e.message}}
-$("generateBtn").onclick=generate;$("copyKey").onclick=()=>navigator.clipboard.writeText($("newKey").textContent);
-function addMessage(text,kind){const el=document.createElement("div");el.className="msg "+kind;el.textContent=text;$("chatLog").appendChild(el);$("chatLog").scrollTop=$("chatLog").scrollHeight;return el}
-async function ask(){const q=$("question").value.trim();if(!q)return; $("question").value="";addMessage(q,"user");const wait=addMessage("Ashish AI is thinking…","bot");$("sendBtn").disabled=true;try{const r=await fetch("/api/ai/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q})});const d=await r.json();if(!r.ok)throw Error(d.error||"AI request failed");wait.textContent=d.answer}catch(e){wait.textContent="AI error: "+e.message}finally{$("sendBtn").disabled=false}}
-$("sendBtn").onclick=ask;$("question").addEventListener("keydown",e=>{if(e.key==="Enter")ask()});
-(async()=>{const saved=sessionStorage.getItem("ashishhub_key");if(saved){$("accessKey").value=saved;await unlock()}})();
-</script></body></html>
+let activeKey = "";
+
+const $ = id => document.getElementById(id);
+
+function showPlatforms() {
+  const gate = $("KeyGate") || $("keyGate");
+  gate?.classList.add("hidden");
+  $("platformList")?.classList.remove("hidden");
+  $("lockNote")?.classList.add("hidden");
+}
+
+async function api(url, data, headers = {}) {
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...headers
+    },
+    body: JSON.stringify(data)
+  });
+
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.error || "Server error");
+  return result;
+}
+
+async function unlock() {
+  const key = $("accessKey").value.trim();
+  $("gateMessage").textContent = "Checking key...";
+
+  if (!key) {
+    $("gateMessage").textContent = "Enter Access Key.";
+    return;
+  }
+
+  try {
+    const result = await api("/api/keys/validate", { key });
+
+    if (result.valid) {
+      activeKey = key;
+      sessionStorage.setItem("ashishhub_key", key);
+      showPlatforms();
+    } else {
+      $("gateMessage").textContent = "Invalid Access Key.";
+    }
+  } catch (error) {
+    $("gateMessage").textContent = error.message;
+  }
+}
+
+async function generate() {
+  const pin = $("adminPin").value.trim();
+  $("adminNotice").textContent = "Generating...";
+
+  try {
+    const result = await api(
+      "/api/admin/keys",
+      {},
+      { "x-admin-pin": pin }
+    );
+
+    $("keyResult").textContent = result.key;
+    $("adminNotice").textContent = "Key generated!";
+  } catch (error) {
+    $("adminNotice").textContent = error.message;
+  }
+}
+
+function addMessage(text, kind) {
+  const el = document.createElement("div");
+  el.className = "msg " + kind;
+  el.textContent = text;
+  $("chatLog").appendChild(el);
+  $("chatLog").scrollTop = $("chatLog").scrollHeight;
+}
+
+async function ask() {
+  const q = $("question").value.trim();
+  if (!q) return;
+
+  $("question").value = "";
+  addMessage(q, "user");
+
+  const loading = document.createElement("div");
+  loading.className = "msg bot";
+  loading.textContent = "Ashish AI is thinking...";
+  $("chatLog").appendChild(loading);
+
+  try {
+    const result = await api("/api/ai/chat", { question: q });
+    loading.textContent = result.answer || "No answer received.";
+  } catch (error) {
+    loading.textContent = error.message;
+  }
+}
+
+$("unlockBtn").onclick = unlock;
+$("accessKey").addEventListener("keydown", e => {
+  if (e.key === "Enter") unlock();
+});
+
+$("generateBtn").onclick = generate;
+$("sendBtn").onclick = ask;
+
+$("question").addEventListener("keydown", e => {
+  if (e.key === "Enter") ask();
+});
+
+$("copyKey").onclick = () => {
+  const key = $("keyResult").textContent;
+  if (key) navigator.clipboard.writeText(key);
+};
+
+(async () => {
+  const saved = sessionStorage.getItem("ashishhub_key");
+  if (saved) {
+    $("accessKey").value = saved;
+    await unlock();
+  }
+})();
+</script>
+</body>
+</html>
