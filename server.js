@@ -61,8 +61,7 @@ app.post("/api/keys/validate", (req, res) => {
 
 // Gemini AI provider call stays on the server.
 app.post("/api/ai/chat", async (req, res) => {
-  const question = String(req.body.question || "").trim();
-
+  const question = String(req.body.question || req.body.message || "").trim();
   if (!question || question.length > 4000) {
     return res.status(400).json({
       error: "Enter a question (up to 4,000 characters)."
