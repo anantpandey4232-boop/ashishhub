@@ -345,10 +345,23 @@ if ("serviceWorker" in navigator) {
         <button onclick="quickAsk('Explain photosynthesis simply')">🧪 Science</button>
         <button onclick="quickAsk('Give me motivation to study')">🔥 Motivation</button>
       </div>
-      <div class="ai-input">
-        <textarea id="aiInput" rows="1" placeholder="Ask anything about your studies..."></textarea>
-        <button id="sendBtn" onclick="sendAI()">➤</button>
-      </div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+  <button type="button" class="btn secondary" onclick="document.getElementById('cameraInput').click()">📷 Camera</button>
+  <button type="button" class="btn secondary" onclick="document.getElementById('galleryInput').click()">🖼️ Gallery</button>
+</div>
+
+<input type="file" id="cameraInput" accept="image/*" capture="environment" hidden>
+<input type="file" id="galleryInput" accept="image/*" hidden>
+
+<div id="imagePreview" style="display:none;margin-top:10px">
+  <img id="previewImage" style="max-width:100%;max-height:150px;border-radius:12px">
+  <button type="button" onclick="clearAIImage()">✖ Remove Photo</button>
+</div>
+
+<div class="ai-input">
+  <textarea id="aiInput" rows="1" placeholder="Ask anything or send a photo..."></textarea>
+  <button id="sendBtn" onclick="sendAI()">➤</button>
+</div>
       <div style="font-size:9px;color:var(--muted);margin-top:7px">Ashish AI • Gemini connection</div>
     </div>
   </section>
@@ -622,54 +635,130 @@ updateTimerUI();
   $('chatLog').scrollTop=$('chatLog').scrollHeight;
   return bubble;
 }
-async function sendAI(){
-  const input=$('aiInput');
-  const sendBtn=$('sendBtn');
-  const message=input.value.trim();
-  if(!message||sendBtn.disabled)return;
+let selectedAIImage = "";
 
-  input.value='';
-  addBubble(message,'user');
-  const loading=addBubble('Ashish AI soch raha hai... ✨');
-  sendBtn.disabled=true;
+function clearAIImage(){
+  selectedAIImage = "";
+  $('cameraInput').value = "";
+  $('galleryInput').value = "";
+  $('imagePreview').style.display = "none";
+  $('previewImage').src = "";
+}
+
+function handleAIImage(file){
+  if(!file) return;
+
+  if(!file.type.startsWith("image/")){
+    alert("Please select an image.");
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    const img = new Image();
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const scale = Math.min(1, 1280 / Math.max(img.width, img.height));
+
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      selectedAIImage = canvas.toDataURL("image/jpeg", 0.75);
+
+      $('previewImage').src = selectedAIImage;
+      $('imagePreview').style.display = "block";
+    };
+
+    img.onerror = () => alert("Image could not be loaded.");
+    img.src = reader.result;
+  };
+
+  reader.onerror = () => alert("Image could not be read.");
+  reader.readAsDataURL(file);
+}
+
+$('cameraInput').addEventListener('change', event => {
+  handleAIImage(event.target.files[0]);
+});
+
+$('galleryInput').addEventListener('change', event => {
+  handleAIImage(event.target.files[0]);
+});
+
+async function sendAI(){
+  const input = $('aiInput');
+  const sendBtn = $('sendBtn');
+  const message = input.value.trim();
+  const image = selectedAIImage;
+
+  if((!message && !image) || sendBtn.disabled) return;
+
+  input.value = '';
+  addBubble(message || 'Please solve this image.', 'user');
+
+  if(image){
+    const photo = document.createElement('img');
+    photo.src = image;
+    photo.style.maxWidth = '180px';
+    photo.style.display = 'block';
+    photo.style.borderRadius = '10px';
+    $('chatLog').appendChild(photo);
+  }
+
+  const loading = addBubble('Ashish AI photo/question dekh raha hai... ✨');
+  sendBtn.disabled = true;
 
   try{
-    const response=await fetch('/api/ai/chat',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({message:message})
+    const response = await fetch('/api/ai/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        message: message,
+        image: image
+      })
     });
 
-    const raw=await response.text();
-    let data={};
-    try{data=raw?JSON.parse(raw):{};}
-    catch(e){throw new Error('Server ne valid JSON response nahi diya. Render Logs check karein.');}
+    const raw = await response.text();
+    let data = {};
 
-    if(!response.ok){
-      throw new Error(data.error||data.message||('Server error: '+response.status));
+    try{
+      data = raw ? JSON.parse(raw) : {};
+    }catch(e){
+      throw new Error('Server ne valid JSON response nahi diya.');
     }
 
-    const answer=
-      data.reply||
-      data.text||
-      data.response||
-      data.answer||
-      data.candidates?.
-     [0]?.content?.parts?.map(p=>p.text||'').join('\n')||
+    if(!response.ok){
+      throw new Error(data.error || data.message || ('Server error: ' + response.status));
+    }
+
+    const answer =
+      data.answer ||
+      data.reply ||
+      data.text ||
+      data.response ||
+      data.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('\n') ||
       '';
 
-    if(!answer)throw new Error('AI ka response khaali aaya. Server route check karein.');
-    loading.textContent=answer;
+    if(!answer) throw new Error('AI ka response khaali aaya.');
+
+    loading.textContent = answer;
+    clearAIImage();
 
   }catch(error){
     loading.classList.add('error');
-    loading.textContent='AI connection error: '+(error.message||'Please try again.');
-    console.error('Ashish AI error:',error);
+    loading.textContent = 'AI connection error: ' + (error.message || 'Please try again.');
+    console.error('Ashish AI error:', error);
+
   }finally{
-    sendBtn.disabled=false;
-    $('chatLog').scrollTop=$('chatLog').scrollHeight;
+    sendBtn.disabled = false;
+    $('chatLog').scrollTop = $('chatLog').scrollHeight;
   }
-}
+  }
 function quickAsk(message){
   $('aiInput').value=message;
   sendAI();
