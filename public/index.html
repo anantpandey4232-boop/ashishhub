@@ -451,7 +451,27 @@ function goTo(id){
   const el = $(id);
   if(el) el.scrollIntoView({behavior:'smooth',block:'center'});
 }
+let currentPlatformUrl = "";
 
+function openPlatform(title, url){
+  currentPlatformUrl = url;
+  $('platformTitle').textContent = title;
+  $('platformFrame').src = url;
+  $('platformViewer').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+function closePlatform(){
+  $('platformViewer').style.display = 'none';
+  $('platformFrame').src = 'about:blank';
+  document.body.style.overflow = '';
+}
+
+function openPlatformExternal(){
+  if(currentPlatformUrl){
+    window.open(currentPlatformUrl, '_blank', 'noopener');
+  }
+}
 /* INTRO */
 window.addEventListener('load',()=>{
   setTimeout(()=>{
