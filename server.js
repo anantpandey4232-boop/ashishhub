@@ -59,72 +59,135 @@ app.post("/api/keys/validate", (req, res) => {
 
 // AI provider call stays on the server; the API key is never sent to the browser.
 
-// Gemini AI provider call stays on the server.
 app.post("/api/ai/chat", async (req, res) => {
-  const question = String(req.body.question || req.body.message || "").trim();
+  const question = String(
+    req.body?.question || req.body?.message || ""
+  ).trim();
+
   if (!question || question.length > 4000) {
     return res.status(400).json({
-      error: "Enter a question (up to 4,000 characters)."
+      error: "Please enter a question (maximum 4,000 characters)."
     });
   }
 
-  if (!process.env.GEMINI_API_KEY) {
+  const apiKey = process.env.GEMINI_API_KEY;
+
+  if (!apiKey) {
     return res.status(503).json({
-      error: "Gemini AI is not configured. Add GEMINI_API_KEY in Render."
+      error: "Gemini API key is missing. Add GEMINI_API_KEY in Render."
     });
   }
 
-  try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${process.env.GEMINI_MODEL || "gemini-3.8-flash"}:generateContent`,
-      {
-        method: "POST",
-        headers: {
-          "x-goog-api-key": process.env.GEMINI_API_KEY,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          systemInstruction: {
-            parts: [{
-              text: "You are Ashish AI, a friendly study tutor. Explain clearly and step by step. Use the student's language when possible. Help with maths, science, English and general school subjects. If solving a numerical problem, show the method."
-            }]
-          },
-          contents: [{
-            role: "user",
-            parts: [{ text: question }]
-          }],
-          generationConfig: {
-            temperature: 0.5,
-            maxOutputTokens: 2048
+  const models = [
+    process.env.GEMINI_MODEL || "gemini-3.5-flash-lite",
+    "gemini-3.5-flash-lite",
+    "gemini-3.6-flash",
+    "gemini-3.8-flash"
+  ];
+
+  const uniqueModels = [...new Set(models)];
+  let lastError = "";
+
+  for (const model of uniqueModels) {
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        console.log(
+          `Ashish AI: Trying ${model}, attempt ${attempt}`
+        );
+
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-goog-api-key": apiKey
+            },
+            body: JSON.stringify({
+              systemInstruction: {
+                parts: [{
+                  text: `You are Ashish AI, an intelligent and friendly study tutor.
+Answer in the same language as the student.
+Explain concepts clearly and step by step.
+Help with mathematics, science, English, history,
+computer science and general knowledge.
+For numerical problems, show formulas and calculations.
+Be accurate, helpful and easy to understand.`
+                }]
+              },
+              contents: [{
+                role: "user",
+                parts: [{ text: question }]
+              }],
+              generationConfig: {
+                temperature: 0.5,
+                maxOutputTokens: 2048
+              }
+            })
           }
-        })
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          const message =
+            data.error?.message || "Gemini request failed.";
+
+          lastError = message;
+
+          console.error(
+            `Gemini ${model} error:`,
+            response.status,
+            message
+          );
+
+          // Try another model if overloaded or unavailable.
+          if (
+            [429, 500, 503, 404].includes(response.status)
+          ) {
+            break;
+          }
+
+          return res.status(502).json({
+            error: message
+          });
+        }
+
+        const answer = data.candidates?.[0]?.content?.parts
+          ?.map(part => part.text || "")
+          .join("")
+          .trim();
+
+        if (answer) {
+          console.log(`Ashish AI answered using ${model}`);
+
+          return res.json({
+            answer,
+            model
+          });
+        }
+
+        lastError = "The AI returned an empty response.";
+        break;
+
+      } catch (error) {
+        lastError = error.message || "Network error";
+
+        console.error("Ashish AI connection error:", lastError);
+
+        if (attempt === 1) {
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
       }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return res.status(502).json({
-        error: data.error?.message || "Gemini AI request failed."
-      });
     }
-
-    const answer = data.candidates?.[0]?.content?.parts
-      ?.map(part => part.text || "")
-      .join("")
-      .trim();
-
-    res.json({
-      answer: answer || "I couldn't generate an answer. Please try again."
-    });
-
-  } catch (err) {
-    res.status(500).json({
-      error: "Gemini AI service is temporarily unavailable."
-    });
   }
-});
 
+  return res.status(503).json({
+    error:
+      "Ashish AI is temporarily busy. All available models failed. Please try again shortly.",
+    details: lastError
+  });
+});
 
 app.get("/api/health", (_req, res) => res.json({ ok: true, app: "AshishHub" }));
 app.listen(PORT, () => console.log(`AshishHub running on http://localhost:${PORT}`));
