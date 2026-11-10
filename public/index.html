@@ -10,156 +10,102 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 :root{
---bg:#070916;
---panel:#11172c;
---text:#f4f6ff;
---muted:#929dbb;
---blue:#5795ff;
---purple:#a16aff;
---cyan:#42e5ef;
---border:rgba(255,255,255,.09);
+  --bg:#070916;--panel:#11172c;--text:#f4f6ff;
+  --muted:#929dbb;--blue:#5795ff;--purple:#a16aff;
+  --cyan:#42e5ef;--border:rgba(255,255,255,.09);
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
-margin:0;background:var(--bg);color:var(--text);
-font-family:Inter,Arial,sans-serif;overflow-x:hidden
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,Arial,sans-serif;overflow-x:hidden
 }
 button,input,textarea{font:inherit}
 button{cursor:pointer}
-
-/* BACKGROUND */
 #particles{
-position:fixed;inset:0;width:100%;height:100%;
-z-index:-2;pointer-events:none
+  position:fixed;inset:0;width:100%;height:100%;
+  z-index:-2;pointer-events:none
 }
 .aurora{
-position:fixed;width:420px;height:420px;
-border-radius:50%;filter:blur(110px);
-opacity:.18;z-index:-1;pointer-events:none;
-animation:float 13s ease-in-out infinite alternate
+  position:fixed;width:420px;height:420px;border-radius:50%;
+  filter:blur(110px);opacity:.18;z-index:-1;
+  pointer-events:none;animation:float 13s ease-in-out infinite alternate
 }
 .a1{background:#624bff;top:-190px;left:-130px}
 .a2{background:#00c9e8;right:-190px;top:25%;animation-delay:-4s}
 .a3{background:#a12dff;bottom:-200px;left:30%;animation-delay:-7s}
-@keyframes float{
-to{transform:translate(100px,90px) scale(1.3)}
-}
+@keyframes float{to{transform:translate(100px,90px) scale(1.3)}}
 
-/* ADVANCED INTRO */
+/* INTRO */
 #intro{
-position:fixed;inset:0;z-index:1000;
-background:
-radial-gradient(ellipse at 50% 45%,#17244a 0%,#0b1025 40%,#050711 100%);
-display:flex;align-items:center;justify-content:center;
-flex-direction:column;overflow:hidden;
-animation:introAutoHide .9s ease 3s forwards;
+  position:fixed;inset:0;z-index:1000;
+  background:radial-gradient(ellipse at 50% 45%,#17244a,#0b1025 55%,#050711);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;overflow:hidden;
+  animation:introHide 1s ease 3s forwards
 }
-@keyframes introAutoHide{
-to{opacity:0;visibility:hidden;pointer-events:none}
-}
+@keyframes introHide{to{opacity:0;visibility:hidden;pointer-events:none}}
+#intro.hide{opacity:0;visibility:hidden;pointer-events:none}
 .intro-stars{
-position:absolute;inset:0;
-background-image:
-radial-gradient(2px 2px at 20% 30%,#ffffffaa 50%,transparent),
-radial-gradient(2px 2px at 70% 20%,#54cfff 50%,transparent),
-radial-gradient(2px 2px at 80% 75%,#b58cff 50%,transparent),
-radial-gradient(1px 1px at 35% 80%,#ffffffaa 50%,transparent);
-background-size:190px 190px;
-opacity:.5;animation:starMove 12s linear infinite
+  position:absolute;inset:0;
+  background-image:
+  radial-gradient(2px 2px at 20% 30%,#fff 50%,transparent),
+  radial-gradient(2px 2px at 70% 20%,#54cfff 50%,transparent),
+  radial-gradient(2px 2px at 80% 75%,#b58cff 50%,transparent);
+  background-size:190px 190px;opacity:.5;
+  animation:starMove 12s linear infinite
 }
 @keyframes starMove{to{transform:translateY(-50px)}}
-.intro-grid{
-position:absolute;inset:0;
-background-image:linear-gradient(#738cff0c 1px,transparent 1px),
-linear-gradient(90deg,#738cff0c 1px,transparent 1px);
-background-size:45px 45px;
-mask-image:radial-gradient(ellipse at center,black,transparent 75%);
-}
 .intro-core{
-position:relative;width:170px;height:170px;
-display:grid;place-items:center;
-margin-bottom:27px;
-animation:coreEntrance 1.2s cubic-bezier(.2,.8,.2,1) both
+  position:relative;width:170px;height:170px;
+  display:grid;place-items:center;margin-bottom:27px;
+  animation:coreIn 1.2s ease both
 }
-@keyframes coreEntrance{
-from{opacity:0;transform:scale(.3) rotate(-40deg)}
-to{opacity:1;transform:scale(1) rotate(0)}
-}
+@keyframes coreIn{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:scale(1)}}
 .intro-ring{
-position:absolute;inset:0;border-radius:50%;
-border:2px solid transparent;
-border-top-color:#53eaff;
-border-bottom-color:#9e72ff;
-box-shadow:0 0 22px #6e6aff66,inset 0 0 20px #6e6aff22;
-animation:ringSpin 3s linear infinite
+  position:absolute;inset:0;border-radius:50%;
+  border:2px solid transparent;border-top-color:#53eaff;
+  border-bottom-color:#9e72ff;animation:spin 3s linear infinite
 }
-.intro-ring.r2{
-inset:12px;border-style:dashed;
-border-top-color:#b17aff;border-bottom-color:#43e8ed;
-animation:ringSpin 5s linear infinite reverse
-}
-.intro-ring.r3{
-inset:24px;border:1px solid #70baff77;
-animation:ringSpin 8s linear infinite
-}
-@keyframes ringSpin{to{transform:rotate(360deg)}}
+.intro-ring.r2{inset:12px;border-style:dashed;animation:spin 5s linear infinite reverse}
+.intro-ring.r3{inset:24px;border:1px solid #70baff77;animation:spin 8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 .intro-logo{
-width:100px;height:100px;border-radius:30px;
-display:grid;place-items:center;
-font-size:58px;font-weight:900;
-color:white;position:relative;z-index:2;
-background:linear-gradient(135deg,#318dff,#784bff 55%,#b55dff);
-box-shadow:0 0 35px #655cff,0 0 90px #675aff77;
-animation:logoPulse 1.5s ease-in-out infinite alternate
+  width:100px;height:100px;border-radius:30px;
+  display:grid;place-items:center;font-size:58px;font-weight:900;
+  background:linear-gradient(135deg,#318dff,#784bff 55%,#b55dff);
+  box-shadow:0 0 35px #655cff,0 0 90px #675aff77;
+  animation:pulse 1.5s ease-in-out infinite alternate
 }
-@keyframes logoPulse{
-to{transform:scale(1.08);filter:brightness(1.25);
-box-shadow:0 0 55px #7a66ff,0 0 120px #5c78ff99}
-}
+@keyframes pulse{to{transform:scale(1.08);filter:brightness(1.3)}}
 .intro-name{
-font-size:clamp(27px,7vw,40px);
-font-weight:900;letter-spacing:5px;
-background:linear-gradient(90deg,#fff,#6fe8ff,#b78aff,#fff);
-background-size:250% auto;
--webkit-background-clip:text;background-clip:text;color:transparent;
-animation:textShine 2s linear infinite
+  font-size:clamp(27px,7vw,40px);font-weight:900;letter-spacing:5px;
+  background:linear-gradient(90deg,#fff,#6fe8ff,#b78aff,#fff);
+  background-size:250% auto;-webkit-background-clip:text;
+  background-clip:text;color:transparent;animation:shine 2s linear infinite
 }
-@keyframes textShine{to{background-position:250% center}}
-.intro-sub{
-font-size:10px;letter-spacing:5px;
-color:#aab7e5;margin-top:12px;text-align:center
-}
-.intro-loading{
-width:210px;height:4px;border-radius:20px;
-background:#293252;margin-top:30px;overflow:hidden;
-box-shadow:0 0 15px #625aff44
-}
+@keyframes shine{to{background-position:250% center}}
+.intro-sub{font-size:10px;letter-spacing:5px;color:#aab7e5;margin-top:12px}
+.intro-loading{width:210px;height:4px;border-radius:20px;background:#293252;margin-top:30px;overflow:hidden}
 .intro-loading span{
-display:block;width:0;height:100%;
-background:linear-gradient(90deg,#3ee9ef,#6e83ff,#c17aff);
-box-shadow:0 0 15px #5ceaff;
-animation:loading 3.3s ease forwards
+  display:block;width:0;height:100%;
+  background:linear-gradient(90deg,#3ee9ef,#6e83ff,#c17aff);
+  animation:loading 3s ease forwards
 }
 @keyframes loading{to{width:100%}}
-.intro-status{
-color:#7f91bd;font-size:9px;
-letter-spacing:2px;margin-top:12px
-}
 
 /* HEADER */
 header{
-position:sticky;top:0;z-index:20;
-display:flex;align-items:center;justify-content:space-between;
-padding:14px 5%;background:#080b18dd;
-backdrop-filter:blur(18px);border-bottom:1px solid var(--border)
+  position:sticky;top:0;z-index:20;display:flex;
+  align-items:center;justify-content:space-between;
+  padding:14px 5%;background:#080b18dd;
+  backdrop-filter:blur(18px);border-bottom:1px solid var(--border)
 }
 .brand{display:flex;align-items:center;gap:11px;font-size:18px;font-weight:900}
 .brand-icon{
-width:40px;height:40px;border-radius:13px;
-display:grid;place-items:center;
-background:linear-gradient(135deg,#397fff,#a45cff);
-box-shadow:0 0 22px #765cff77
+  width:40px;height:40px;border-radius:13px;display:grid;place-items:center;
+  background:linear-gradient(135deg,#397fff,#a45cff);
+  box-shadow:0 0 22px #765cff77
 }
 .brand small{display:block;font-size:9px;color:var(--muted);letter-spacing:2px;margin-top:3px}
 .header-right{display:flex;align-items:center;gap:13px}
@@ -173,39 +119,29 @@ main{max-width:1200px;margin:auto;padding:35px 5% 100px}
 .eyebrow{color:var(--cyan);font-size:11px;font-weight:800;letter-spacing:3px}
 .hero h1{font-size:clamp(32px,6vw,62px);line-height:1.08;margin:15px 0}
 .gradient{
-background:linear-gradient(90deg,#60a5ff,#b17aff,#42e5e9);
--webkit-background-clip:text;background-clip:text;color:transparent
+  background:linear-gradient(90deg,#60a5ff,#b17aff,#42e5e9);
+  -webkit-background-clip:text;background-clip:text;color:transparent
 }
 .hero p{color:var(--muted);line-height:1.7;max-width:600px;font-size:14px}
 .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:23px}
 .btn{
-border:0;border-radius:12px;padding:12px 18px;font-weight:800;
-font-size:12px;color:white;
-background:linear-gradient(110deg,#397eff,#9257ff);
-box-shadow:0 8px 25px #654bff33;transition:.25s
+  border:0;border-radius:12px;padding:12px 18px;font-weight:800;
+  font-size:12px;color:white;background:linear-gradient(110deg,#397eff,#9257ff);
+  box-shadow:0 8px 25px #654bff33;transition:.25s
 }
 .btn:hover{transform:translateY(-3px);filter:brightness(1.15)}
 .btn.secondary{background:#1b2440;border:1px solid var(--border);box-shadow:none}
-.section-title{
-display:flex;align-items:center;justify-content:space-between;
-margin:35px 0 15px
-}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.section-title{display:flex;align-items:center;justify-content:space-between;margin:35px 0 15px;gap:10px}
 .section-title h2{font-size:17px;margin:0}
 .section-title span{font-size:10px;color:var(--muted)}
 .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
 .card{
-background:linear-gradient(145deg,#151c32ee,#0e1427ee);
-border:1px solid var(--border);border-radius:19px;
-padding:20px;position:relative;overflow:hidden;
-transition:transform .3s,border-color .3s
-}
-.card:before{
-content:"";position:absolute;inset:0;opacity:0;
-background:radial-gradient(circle at top right,#657bff25,transparent 65%);
-transition:.3s;pointer-events:none
+  background:linear-gradient(145deg,#151c32ee,#0e1427ee);
+  border:1px solid var(--border);border-radius:19px;padding:20px;
+  position:relative;overflow:hidden;transition:.3s
 }
 .card:hover{transform:translateY(-5px);border-color:#8c7aff88}
-.card:hover:before{opacity:1}
 .stat-label{font-size:11px;color:var(--muted)}
 .stat-value{font-size:29px;font-weight:900;margin:12px 0 5px}
 .stat-foot{font-size:10px;color:#75e8c0}
@@ -215,128 +151,97 @@ transition:.3s;pointer-events:none
 .timer-card{grid-column:span 2;text-align:center}
 .timer-modes{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:15px 0}
 .mode{
-padding:8px 12px;background:#202943;color:#b8c3e4;
-border:1px solid var(--border);border-radius:20px;font-size:10px
+  padding:8px 12px;background:#202943;color:#b8c3e4;
+  border:1px solid var(--border);border-radius:20px;font-size:10px
 }
 .mode.active{background:#654dff;color:white;border-color:#947aff}
 .timer-ring{
-width:220px;height:220px;margin:12px auto 18px;
-border-radius:50%;display:grid;place-items:center;position:relative;
-background:conic-gradient(var(--cyan) var(--progress,0%),#29314c 0);
-box-shadow:0 0 35px #645aff22
+  width:220px;height:220px;margin:12px auto 18px;border-radius:50%;
+  display:grid;place-items:center;position:relative;
+  background:conic-gradient(var(--cyan) var(--progress,0%),#29314c 0);
+  box-shadow:0 0 35px #645aff22
 }
-.timer-ring:before{
-content:"";position:absolute;inset:10px;
-background:#11172b;border-radius:50%
-}
+.timer-ring:before{content:"";position:absolute;inset:10px;background:#11172b;border-radius:50%}
 .timer-inner{position:relative;z-index:1}
 .timer-time{font-size:48px;font-weight:900;letter-spacing:2px}
 .timer-caption{font-size:10px;color:var(--muted);margin-top:6px;letter-spacing:2px}
 .timer-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
 .timer-actions .btn{min-width:95px}
 .progress{height:7px;background:#28314a;border-radius:20px;overflow:hidden;margin-top:16px}
-.progress span{
-display:block;height:100%;width:0;
-background:linear-gradient(90deg,var(--cyan),var(--purple));transition:width .4s
-}
+.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--purple));transition:width .4s}
 
 /* AI */
 .ai-card{grid-column:span 1;min-height:330px;display:flex;flex-direction:column}
 .ai-heading{display:flex;align-items:center;gap:10px;margin-bottom:13px}
 .ai-avatar{
-width:42px;height:42px;border-radius:14px;
-display:grid;place-items:center;font-size:22px;
-background:linear-gradient(135deg,#2c8dff,#a34cff);
-box-shadow:0 0 20px #725aff66
+  width:42px;height:42px;border-radius:14px;display:grid;place-items:center;
+  font-size:22px;background:linear-gradient(135deg,#2c8dff,#a34cff);
+  box-shadow:0 0 20px #725aff66
 }
 .ai-heading strong{font-size:13px}
 .ai-heading small{display:block;color:#73e9bd;font-size:10px;margin-top:4px}
 .chat-log{flex:1;min-height:125px;max-height:220px;overflow:auto;font-size:12px;line-height:1.65}
-.bubble{
-padding:10px 12px;border-radius:12px;
-background:#202943;margin:8px 0;
-white-space:pre-wrap;overflow-wrap:anywhere
-}
+.bubble{padding:10px 12px;border-radius:12px;background:#202943;margin:8px 0;white-space:pre-wrap;overflow-wrap:anywhere}
 .bubble.user{background:#37316a;margin-left:18px}
+.bubble.error{background:#572b3b;color:#ffd7df}
 .ai-input{display:flex;gap:7px;margin-top:12px}
 .ai-input textarea{
-width:100%;resize:none;background:#0b1122;
-border:1px solid var(--border);border-radius:11px;
-color:white;padding:11px;font-size:11px;outline:none;min-height:42px
+  width:100%;resize:none;background:#0b1122;border:1px solid var(--border);
+  border-radius:11px;color:white;padding:11px;font-size:11px;outline:none;min-height:42px
 }
 .ai-input button{border:0;border-radius:11px;background:#7359ff;color:white;padding:0 15px;font-weight:900}
 .quick-prompts{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
-.quick-prompts button{
-border:1px solid var(--border);background:#1b2440;
-color:#bfc8e5;padding:6px 8px;border-radius:20px;font-size:9px
-}
+.quick-prompts button{border:1px solid var(--border);background:#1b2440;color:#bfc8e5;padding:6px 8px;border-radius:20px;font-size:9px}
 
-/* PLATFORMS */
+/* LINKS AND GOALS */
 .platform{display:flex;align-items:center;gap:13px;text-decoration:none;color:white}
-.platform-icon{
-width:45px;height:45px;display:grid;place-items:center;
-border-radius:14px;font-size:20px;background:#26345b
-}
+.platform-icon{width:45px;height:45px;display:grid;place-items:center;border-radius:14px;font-size:20px;background:#26345b}
 .platform strong{font-size:13px}
 .platform small{display:block;color:var(--muted);font-size:10px;margin-top:5px}
 .platform-arrow{margin-left:auto;color:var(--cyan)}
 .goal-row{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:12px}
-.goal-row input{
-width:65px;background:#0b1122;border:1px solid var(--border);
-border-radius:8px;color:white;padding:7px
-}
+.goal-row input{width:70px;background:#0b1122;border:1px solid var(--border);border-radius:8px;color:white;padding:7px}
 .quote{font-size:15px;line-height:1.7;font-weight:600}
-footer{
-text-align:center;color:#65708f;font-size:10px;
-padding:30px 10px;border-top:1px solid var(--border)
-}
+footer{text-align:center;color:#65708f;font-size:10px;padding:30px 10px;border-top:1px solid var(--border)}
 .bottom-nav{display:none}
 
-/* CONTENT ALWAYS VISIBLE: no reveal lock */
-.reveal{opacity:1;transform:none}
-
 @media(max-width:760px){
-header{padding:12px 4%}
-.clock{display:none}
-main{padding:20px 4% 100px}
-.grid{grid-template-columns:1fr 1fr;gap:10px}
-.card{padding:15px;border-radius:16px}
-.timer-card,.ai-card{grid-column:span 2}
-.stat-value{font-size:24px}
-.hero{padding-top:25px}
-.bottom-nav{
-display:flex;position:fixed;bottom:0;left:0;right:0;z-index:30;
-background:#0d1325ee;backdrop-filter:blur(18px);
-border-top:1px solid var(--border);justify-content:space-around;
-padding:12px 5px calc(12px + env(safe-area-inset-bottom))
-}
-.bottom-nav a{color:#aeb9d8;text-decoration:none;font-size:10px;text-align:center}
-.bottom-nav a span{display:block;font-size:18px;margin-bottom:4px}
+  header{padding:12px 4%}.clock{display:none}
+  main{padding:20px 4% 100px}
+  .grid{grid-template-columns:1fr 1fr;gap:10px}
+  .card{padding:15px;border-radius:16px}
+  .timer-card,.ai-card{grid-column:span 2}
+  .stat-value{font-size:24px}.hero{padding-top:25px}
+  .bottom-nav{
+    display:flex;position:fixed;bottom:0;left:0;right:0;z-index:30;
+    background:#0d1325ee;backdrop-filter:blur(18px);
+    border-top:1px solid var(--border);justify-content:space-around;
+    padding:12px 5px calc(12px + env(safe-area-inset-bottom))
+  }
+  .bottom-nav a{color:#aeb9d8;text-decoration:none;font-size:10px;text-align:center}
+  .bottom-nav a span{display:block;font-size:18px;margin-bottom:4px}
 }
 @media(max-width:390px){
-.grid{grid-template-columns:1fr}
-.timer-card,.ai-card{grid-column:span 1}
-.timer-ring{width:195px;height:195px}
+  .grid{grid-template-columns:1fr}
+  .timer-card,.ai-card{grid-column:span 1}
+  .timer-ring{width:195px;height:195px}
 }
 </style>
 </head>
 
 <body>
 
-<!-- ADVANCED OPENING SCREEN -->
 <div id="intro">
- <div class="intro-stars"></div>
- <div class="intro-grid"></div>
- <div class="intro-core">
-  <div class="intro-ring"></div>
-  <div class="intro-ring r2"></div>
-  <div class="intro-ring r3"></div>
-  <div class="intro-logo">A</div>
- </div>
- <div class="intro-name">ASHISH HUB</div>
- <div class="intro-sub">YOUR NEXT LEVEL STARTS HERE</div>
- <div class="intro-loading"><span></span></div>
- <div class="intro-status">INITIALIZING YOUR STUDY UNIVERSE...</div>
+  <div class="intro-stars"></div>
+  <div class="intro-core">
+    <div class="intro-ring"></div>
+    <div class="intro-ring r2"></div>
+    <div class="intro-ring r3"></div>
+    <div class="intro-logo">A</div>
+  </div>
+  <div class="intro-name">ASHISH HUB</div>
+  <div class="intro-sub">YOUR NEXT LEVEL STARTS HERE</div>
+  <div class="intro-loading"><span></span></div>
 </div>
 
 <canvas id="particles"></canvas>
@@ -345,211 +250,438 @@ padding:12px 5px calc(12px + env(safe-area-inset-bottom))
 <div class="aurora a3"></div>
 
 <header>
- <div class="brand">
-  <div class="brand-icon">A</div>
-  <div>ASHISH HUB<small>ULTIMATE STUDY SPACE</small></div>
- </div>
- <div class="header-right">
-  <div class="live-pill">● SYSTEM ONLINE</div>
-  <div class="clock">
-   <span id="clock">--:--:--</span>
-   <small id="date">Loading date...</small>
+  <div class="brand">
+    <div class="brand-icon">A</div>
+    <div>ASHISH HUB<small>ULTIMATE STUDY SPACE</small></div>
   </div>
- </div>
+  <div class="header-right">
+    <div class="live-pill">● SYSTEM ONLINE</div>
+    <div class="clock">
+      <span id="clock">--:--:--</span>
+      <small id="date">Loading...</small>
+    </div>
+  </div>
 </header>
 
 <main>
- <section class="hero reveal">
-  <div class="eyebrow">✦ WELCOME TO YOUR FUTURE</div>
-  <h1>Study Smarter.<br><span class="gradient">Become Unstoppable.</span></h1>
-  <p>Your personal space to focus, learn, grow and achieve more. Let your next success story begin today.</p>
-  <div class="hero-actions">
-   <button class="btn" onclick="goTo('timer')">⚡ START FOCUS</button>
-   <button class="btn secondary" onclick="goTo('ai')">✦ ASK ASHISH AI</button>
-  </div>
- </section>
-
- <div class="section-title reveal">
-  <h2>◈ YOUR STUDY OVERVIEW</h2><span>PERSONAL PROGRESS</span>
- </div>
-
- <section class="grid">
-  <div class="card reveal">
-   <span class="stat-icon">⏱️</span>
-   <div class="stat-label">TOTAL FOCUS TIME</div>
-   <div class="stat-value" id="totalMinutes">0</div>
-   <div class="stat-foot">Minutes studied</div>
-  </div>
-  <div class="card reveal">
-   <span class="stat-icon">🏆</span>
-   <div class="stat-label">COMPLETED SESSIONS</div>
-   <div class="stat-value" id="sessions">0</div>
-   <div class="stat-foot">Focus sessions</div>
-  </div>
-  <div class="card reveal">
-   <span class="stat-icon">🔥</span>
-   <div class="stat-label">STUDY STREAK</div>
-   <div class="stat-value" id="streak">0</div>
-   <div class="stat-foot">Active study days</div>
-  </div>
-
-  <div class="card timer-card reveal" id="timer">
-   <div class="section-title">
-    <h2>◉ FOCUS CHAMBER</h2><span>YOUR TIME, YOUR POWER</span>
-   </div>
-   <div class="timer-modes">
-    <button class="mode active" data-mode="focus">FOCUS 25</button>
-    <button class="mode" data-mode="short">SHORT BREAK 5</button>
-    <button class="mode" data-mode="long">LONG BREAK 15</button>
-   </div>
-   <div class="timer-ring" id="timerRing">
-    <div class="timer-inner">
-     <div class="timer-time" id="timerDisplay">25:00</div>
-     <div class="timer-caption" id="timerCaption">TIME TO FOCUS</div>
+  <section class="hero">
+    <div class="eyebrow">✦ WELCOME TO YOUR FUTURE</div>
+    <h1>Study Smarter.<br><span class="gradient">Become Unstoppable.</span></h1>
+    <p>Your personal space to focus, learn, grow and achieve more. Let your next success story begin today.</p>
+    <div class="hero-actions">
+      <button class="btn" onclick="goTo('timer')">⚡ START FOCUS</button>
+      <button class="btn secondary" onclick="goTo('ai')">✦ ASK ASHISH AI</button>
     </div>
-   </div>
-   <div class="timer-actions">
-    <button class="btn" id="startBtn" onclick="toggleTimer()">▶ START</button>
-    <button class="btn secondary" onclick="resetTimer()">↻ RESET</button>
-   </div>
-   <div class="progress"><span id="sessionProgress"></span></div>
-   <div style="font-size:10px;color:var(--muted);margin-top:10px" id="timerStatus">Ready when you are. Make every minute count.</div>
+  </section>
+
+  <div class="section-title">
+    <h2>◈ YOUR STUDY OVERVIEW</h2><span>PERSONAL PROGRESS</span>
   </div>
 
-  <div class="card ai-card reveal" id="ai">
-   <div class="ai-heading">
-    <div class="ai-avatar">✦</div>
-    <div><strong>ASHISH AI</strong><small>● GEMINI POWERED ASSISTANT</small></div>
-   </div>
-   <div class="chat-log" id="chatLog">
-    <div class="bubble">Hello! 👋 Main Ashish AI hoon. Apna study question poochho, main help karunga!</div>
-   </div>
-   <div class="quick-prompts">
-    <button onclick="quickAsk('Make a study timetable for me')">📅 Study Plan</button>
-    <button onclick="quickAsk('Explain photosynthesis simply')">🧪 Science</button>
-    <button onclick="quickAsk('Give me motivation to study')">🔥 Motivation</button>
-   </div>
-   <div class="ai-input">
-    <textarea id="aiInput" rows="1" placeholder="Ask anything about your studies..."></textarea>
-    <button id="sendBtn" onclick="sendAI()">➤</button>
-   </div>
-   <div style="font-size:9px;color:var(--muted);margin-top:7px">AI responses require your Gemini API connection.</div>
+  <section class="grid">
+    <div class="card">
+      <span class="stat-icon">⏱️</span>
+      <div class="stat-label">TOTAL FOCUS TIME</div>
+      <div class="stat-value" id="totalMinutes">0</div>
+      <div class="stat-foot">Minutes studied</div>
+    </div>
+    <div class="card">
+      <span class="stat-icon">🏆</span>
+      <div class="stat-label">COMPLETED SESSIONS</div>
+      <div class="stat-value" id="sessions">0</div>
+      <div class="stat-foot">Focus sessions</div>
+    </div>
+    <div class="card">
+      <span class="stat-icon">🔥</span>
+      <div class="stat-label">STUDY STREAK</div>
+      <div class="stat-value" id="streak">0</div>
+      <div class="stat-foot">Active study days</div>
+    </div>
+
+    <div class="card timer-card" id="timer">
+      <div class="section-title">
+        <h2>◉ FOCUS CHAMBER</h2><span>YOUR TIME, YOUR POWER</span>
+      </div>
+      <div class="timer-modes">
+        <button class="mode active" data-mode="focus" onclick="setMode('focus')">FOCUS 25</button>
+        <button class="mode" data-mode="short" onclick="setMode('short')">SHORT BREAK 5</button>
+        <button class="mode" data-mode="long" onclick="setMode('long')">LONG BREAK 15</button>
+      </div>
+      <div class="timer-ring" id="timerRing">
+        <div class="timer-inner">
+          <div class="timer-time" id="timerDisplay">25:00</div>
+          <div class="timer-caption" id="timerCaption">TIME TO FOCUS</div>
+        </div>
+      </div>
+      <div class="timer-actions">
+        <button class="btn" id="startBtn" onclick="toggleTimer()">▶ START</button>
+        <button class="btn secondary" onclick="resetTimer()">↻ RESET</button>
+      </div>
+      <div class="progress"><span id="sessionProgress"></span></div>
+      <div style="font-size:10px;color:var(--muted);margin-top:10px" id="timerStatus">Ready when you are. Make every minute count.</div>
+    </div>
+
+    <div class="card ai-card" id="ai">
+      <div class="ai-heading">
+        <div class="ai-avatar">✦</div>
+        <div><strong>ASHISH AI</strong><small>● GEMINI POWERED ASSISTANT</small></div>
+      </div>
+      <div class="chat-log" id="chatLog">
+        <div class="bubble">Hello! 👋 Main Ashish AI hoon. Apna study question poochho!</div>
+      </div>
+      <div class="quick-prompts">
+        <button onclick="quickAsk('Make a study timetable for me')">📅 Study Plan</button>
+        <button onclick="quickAsk('Explain photosynthesis simply')">🧪 Science</button>
+        <button onclick="quickAsk('Give me motivation to study')">🔥 Motivation</button>
+      </div>
+      <div class="ai-input">
+        <textarea id="aiInput" rows="1" placeholder="Ask anything about your studies..."></textarea>
+        <button id="sendBtn" onclick="sendAI()">➤</button>
+      </div>
+      <div style="font-size:9px;color:var(--muted);margin-top:7px">Ashish AI • Gemini connection</div>
+    </div>
+  </section>
+
+  <div class="section-title">
+    <h2>◈ YOUR LEARNING ZONE</h2><span>QUICK ACCESS</span>
   </div>
- </section>
+  <section class="grid">
+    <a class="card platform" href="https://stream.aryavidya.cc/" target="_blank" rel="noopener">
+      <div class="platform-icon">🎓</div>
+      <div><strong>AryaVidya</strong><small>Open learning platform</small></div><span class="platform-arrow">↗</span>
+    </a>
+    <a class="card platform" href="https://vercel.app/" target="_blank" rel="noopener">
+      <div class="platform-icon">🚀</div>
+      <div><strong>Vercel Portal</strong><small>Open your portal</small></div><span class="platform-arrow">↗</span>
+    </a>
+    <a class="card platform" href="https://ncert.nic.in/" target="_blank" rel="noopener">
+      <div class="platform-icon">📚</div>
+      <div><strong>NCERT</strong><small>Books and resources</small></div><span class="platform-arrow">↗</span>
+    </a>
+    <a class="card platform" href="https://diksha.gov.in/" target="_blank" rel="noopener">
+      <div class="platform-icon">💡</div>
+      <div><strong>DIKSHA</strong><small>Digital learning resources</small></div><span class="platform-arrow">↗</span>
+    </a>
+    <a class="card platform" href="https://swayam.gov.in/" target="_blank" rel="noopener">
+      <div class="platform-icon">🌐</div>
+      <div><strong>SWAYAM</strong><small>Online courses</small></div><span class="platform-arrow">↗</span>
+    </a>
+    <a class="card platform" href="https://www.cbse.gov.in/" target="_blank" rel="noopener">
+      <div class="platform-icon">🏫</div>
+      <div><strong>CBSE</strong><small>Official education portal</small></div><span class="platform-arrow">↗</span>
+    </a>
+  </section>
 
- <div class="section-title reveal">
-  <h2>◈ YOUR LEARNING ZONE</h2><span>QUICK ACCESS</span>
- </div>
-
- <section class="grid">
-  <a class="card platform reveal" href="https://stream.aryavidya.cc/" target="_blank" rel="noopener">
-   <div class="platform-icon">🎓</div>
-   <div><strong>AryaVidya</strong><small>Open learning platform</small></div>
-   <span class="platform-arrow">↗</span>
-  </a>
-  <a class="card platform reveal" href="https://vercel.app/" target="_blank" rel="noopener">
-   <div class="platform-icon">🚀</div>
-   <div><strong>Vercel Portal</strong><small>Open your portal</small></div>
-   <span class="platform-arrow">↗</span>
-  </a>
-  <a class="card platform reveal" href="https://ncert.nic.in/" target="_blank" rel="noopener">
-   <div class="platform-icon">📚</div>
-   <div><strong>NCERT</strong><small>Books and resources</small></div>
-   <span class="platform-arrow">↗</span>
-  </a>
-  <a class="card platform reveal" href="https://diksha.gov.in/" target="_blank" rel="noopener">
-   <div class="platform-icon">💡</div>
-   <div><strong>DIKSHA</strong><small>Digital learning resources</small></div>
-   <span class="platform-arrow">↗</span>
-  </a>
-  <a class="card platform reveal" href="https://swayam.gov.in/" target="_blank" rel="noopener">
-   <div class="platform-icon">🌐</div>
-   <div><strong>SWAYAM</strong><small>Online courses</small></div>
-   <span class="platform-arrow">↗</span>
-  </a>
-  <a class="card platform reveal" href="https://www.cbse.gov.in/" target="_blank" rel="noopener">
-   <div class="platform-icon">🏫</div>
-   <div><strong>CBSE</strong><small>Official education portal</small></div>
-   <span class="platform-arrow">↗</span>
-  </a>
- </section>
-
- <div class="section-title reveal">
-  <h2>◈ DAILY TARGET</h2><span>BUILD YOUR HABIT</span>
- </div>
-
- <section class="grid">
-  <div class="card reveal" style="grid-column:span 2">
-   <div class="goal-row">
-    <strong>🎯 Daily focus goal</strong>
-    <label>Minutes <input type="number" id="goalInput" min="15" max="1440" value="120"></label>
-   </div>
-   <div class="progress"><span id="goalProgress"></span></div>
-   <div style="font-size:10px;color:var(--muted);margin-top:9px" id="goalText">0 / 120 minutes completed today</div>
+  <div class="section-title">
+    <h2>◈ DAILY TARGET</h2><span>BUILD YOUR HABIT</span>
   </div>
-  <div class="card reveal">
-   <div class="quote" id="quote">“The secret of getting ahead is getting started.”</div>
-   <small style="color:var(--muted)">✦ DAILY INSPIRATION</small>
-  </div>
- </section>
+  <section class="grid">
+    <div class="card" style="grid-column:span 2">
+      <div class="goal-row">
+        <strong>🎯 Daily focus goal</strong>
+        <label>Minutes <input type="number" id="goalInput" min="15" max="1440" value="120"></label>
+      </div>
+      <div class="progress"><span id="goalProgress"></span></div>
+      <div style="font-size:10px;color:var(--muted);margin-top:9px" id="goalText">0 / 120 minutes completed today</div>
+    </div>
+    <div class="card">
+      <div class="quote" id="quote">“The secret of getting ahead is getting started.”</div>
+      <small style="color:var(--muted)">✦ DAILY INSPIRATION</small>
+    </div>
+  </section>
 </main>
 
 <footer>ASHISH HUB • BUILT FOR YOUR BIG DREAMS ✦</footer>
 
 <nav class="bottom-nav">
- <a href="#"><span>⌂</span>Home</a>
- <a href="#timer"><span>⏱</span>Timer</a>
- <a href="#ai"><span>✦</span>AI Tutor</a>
- <a href="#goalInput"><span>🎯</span>Goals</a>
+  <a href="#"><span>⌂</span>Home</a>
+  <a href="#timer"><span>⏱</span>Timer</a>
+  <a href="#ai"><span>✦</span>AI Tutor</a>
+  <a href="#goalInput"><span>🎯</span>Goals</a>
 </nav>
 
 <script>
-/* SAFETY: HIDE INTRO EVEN IF OTHER JS HAS AN ERROR */
+/* COMMON HELPERS */
+const $ = id => document.getElementById(id);
+
+function goTo(id){
+  const el = $(id);
+  if(el) el.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+/* INTRO */
 window.addEventListener('load',()=>{
- setTimeout(()=>{
-  const intro=document.getElementById('intro');
-  if(intro)intro.classList.add('hide');
- },3900);
+  setTimeout(()=>{
+    const intro=$('intro');
+    if(intro)intro.classList.add('hide');
+  },3900);
 });
 
 /* CLOCK */
 function updateClock(){
- const d=new Date();
- document.getElementById('clock').textContent=d.toLocaleTimeString();
- document.getElementById('date').textContent=d.toLocaleDateString(undefined,{
-  weekday:'short',day:'numeric',month:'short',year:'numeric'
- });
+  const d=new Date();
+  $('clock').textContent=d.toLocaleTimeString();
+  $('date').textContent=d.toLocaleDateString(undefined,{
+    weekday:'short',day:'numeric',month:'short',year:'numeric'
+  });
 }
 updateClock();
 setInterval(updateClock,1000);
 
-/* PARTICLE BACKGROUND */
-const canvas=document.getElementById('particles');
-const ctx=canvas.getContext('2d');
-let particles=[];
-function resizeCanvas(){
- canvas.width=innerWidth*devicePixelRatio;
- canvas.height=innerHeight*devicePixelRatio;
- ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
- const count=Math.min(65,Math.floor(innerWidth/15));
- particles=Array.from({length:count},()=>({
-  x:Math.random()*innerWidth,y:Math.random()*innerHeight,
-  vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4
- }));
+/* PARTICLES */
+try{
+  const canvas=$('particles');
+  const ctx=canvas.getContext('2d');
+  let particles=[];
+  function resizeCanvas(){
+    const ratio=window.devicePixelRatio||1;
+    canvas.width=innerWidth*ratio;
+    canvas.height=innerHeight*ratio;
+    ctx.setTransform(ratio,0,0,ratio,0,0);
+    const count=Math.min(65,Math.floor(innerWidth/15));
+    particles=Array.from({length:count},()=>({
+      x:Math.random()*innerWidth,y:Math.random()*innerHeight,
+      vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4
+    }));
+  }
+  function animateParticles(){
+    ctx.clearRect(0,0,innerWidth,innerHeight);
+    for(let i=0;i<particles.length;i++){
+      const p=particles[i];
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>innerWidth)p.vx*=-1;
+      if(p.y<0||p.y>innerHeight)p.vy*=-1;
+      ctx.beginPath();ctx.arc(p.x,p.y,1.4,0,Math.PI*2);
+      ctx.fillStyle='#8b9dff88';ctx.fill();
+      for(let j=i+1;j<particles.length;j++){
+        const q=particles[j],dx=p.x-q.x,dy=p.y-q.y;
+        const dist=Math.hypot(dx,dy);
+        if(dist<110){
+          ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);
+          ctx.strokeStyle=`rgba(112,133,255,${(1-dist/110)*.14})`;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(animateParticles);
+  }
+  resizeCanvas();
+  animateParticles();
+  window.addEventListener('resize',resizeCanvas);
+}catch(error){
+  console.warn('Particle background unavailable:',error);
 }
-function animateParticles(){
- ctx.clearRect(0,0,innerWidth,innerHeight);
- for(let i=0;i<particles.length;i++){
-  const p=particles[i];
-  p.x+=p.vx;p.y+=p.vy;
-  if(p.x<0||p.x>innerWidth)p.vx*=-1;
-  if(p.y<0||p.y>innerHeight)p.vy*=-1;
-  ctx.beginPath();ctx.arc(p.x,p.y,1.4,0,Math.PI*2);
-  ctx.fillStyle='#8b9dff88';ctx.fill();
-  for(let j=i+1;j<particles.length;j++){
-   const q=particles[j],dx=p.x-q.x,dy=p.y-q.y;
-   const dist=Math.hypot(dx,dy);
-   if(dist<110){
-    ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);
-    ctx.strokeStyle=`rgba(112,133,255,${(1-dist/110)*.14})`;
-    ctx.stroke()
+
+/* STUDY DATA */
+const STORAGE_KEY='ashishhub_study_data_v2';
+function todayKey(){return new Date().toLocaleDateString('en-CA')}
+function loadData(){
+  try{
+    return JSON.parse(localStorage.getItem(STORAGE_KEY))||{
+      total:0,sessions:0,days:[],daily:{},goal:120
+    };
+  }catch(e){
+    return {total:0,sessions:0,days:[],daily
+      :{},goal:120};
+  }
+}
+let studyData=loadData();
+
+function saveData(){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(studyData));}
+  catch(e){console.warn('Could not save study progress',e);}
+}
+function renderStats(){
+  $('totalMinutes').textContent=studyData.total||0;
+  $('sessions').textContent=studyData.sessions||0;
+  $('streak').textContent=(studyData.days||[]).length;
+  const today=todayKey();
+  const done=(studyData.daily||{})[today]||0;
+  const goal=Number(studyData.goal)||120;
+  $('goalInput').value=goal;
+  $('goalText').textContent=`${done} / ${goal} minutes completed today`;
+  $('goalProgress').style.width=Math.min(100,done/goal*100)+'%';
+}
+function completeFocusSession(minutes){
+  const today=todayKey();
+  studyData.total=(studyData.total||0)+minutes;
+  studyData.sessions=(studyData.sessions||0)+1;
+  studyData.daily=studyData.daily||{};
+  studyData.daily[today]=(studyData.daily[today]||0)+minutes;
+  studyData.days=studyData.days||[];
+  if(!studyData.days.includes(today))studyData.days.push(today);
+  saveData();
+  renderStats();
+}
+$('goalInput').addEventListener('change',()=>{
+  let value=Number($('goalInput').value);
+  if(!Number.isFinite(value))value=120;
+  value=Math.max(15,Math.min(1440,Math.round(value)));
+  studyData.goal=value;
+  saveData();
+  renderStats();
+});
+renderStats();
+
+/* POMODORO TIMER */
+const modes={
+  focus:{seconds:25*60,label:'TIME TO FOCUS'},
+  short:{seconds:5*60,label:'SHORT BREAK'},
+  long:{seconds:15*60,label:'LONG BREAK'}
+};
+let currentMode='focus';
+let remaining=modes.focus.seconds;
+let timerInterval=null;
+ let timerRunning=false;
+
+function formatTime(seconds){
+  const m=Math.floor(seconds/60);
+  const s=seconds%60;
+  return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+function updateTimerUI(){
+  $('timerDisplay').textContent=formatTime(remaining);
+  $('timerCaption').textContent=modes[currentMode].label;
+  const elapsed=modes[currentMode].seconds-remaining;
+  const percent=elapsed/modes[currentMode].seconds*100;
+  $('timerRing').style.setProperty('--progress',percent+'%');
+  $('sessionProgress').style.width=percent+'%';
+  $('startBtn').textContent=timerRunning?'Ⅱ PAUSE':'▶ START';
+}
+function stopTimer(){if(timerInterval!==null)clearInterval(timerInterval);
+  timerInterval=null;
+  timerRunning=false;
+  updateTimerUI();
+}
+function setMode(mode){
+  if(!modes[mode])return;
+  stopTimer();
+  currentMode=mode;
+  remaining=modes[mode].seconds;
+  document.querySelectorAll('.mode').forEach(button=>{
+    button.classList.toggle('active',button.dataset.mode===mode);
+  });
+  $('timerStatus').textContent='Ready when you are. Make every minute count.';
+  updateTimerUI();
+}
+function tickTimer(){
+  if(remaining>0){
+    remaining--;
+    updateTimerUI();
+  }
+  if(remaining<=0){
+    stopTimer();
+    $('timerStatus').textContent='🎉 Session completed! Great work!';
+    if(currentMode==='focus'){
+      completeFocusSession(25);
+    }
+    try{
+      if('Notification' in window && Notification.permission==='granted'){
+        new Notification('AshishHub',{body:'Your '+currentMode+' session is complete!'});
+      }
+    }catch(e){}
+  }
+}
+function toggleTimer(){
+  if(timerRunning){
+    stopTimer();
+    $('timerStatus').textContent='Timer paused. Resume whenever you are ready.';
+    return;
+  }
+  if(remaining<=0)remaining=modes[currentMode].seconds;
+  timerRunning=true;
+  updateTimerUI();
+  $('timerStatus').textContent='Your session is running. Stay focused!';
+  timerInterval=setInterval(tickTimer,1000);
+}
+function resetTimer(){
+  stopTimer();
+  remaining=modes[currentMode].seconds;
+  $('timerStatus').textContent='Timer reset. Ready when you are.';
+  updateTimerUI();
+}
+updateTimerUI();
+
+/* ASHISH AI */
+ function addBubble(message,type=''){
+  const bubble=document.createElement('div');
+  bubble.className='bubble'+(type?' '+type:'');
+  bubble.textContent=message;
+  $('chatLog').appendChild(bubble);
+  $('chatLog').scrollTop=$('chatLog').scrollHeight;
+  return bubble;
+}
+async function sendAI(){
+  const input=$('aiInput');
+  const sendBtn=$('sendBtn');
+  const message=input.value.trim();
+  if(!message||sendBtn.disabled)return;
+
+  input.value='';
+  addBubble(message,'user');
+  const loading=addBubble('Ashish AI soch raha hai... ✨');
+  sendBtn.disabled=true;
+
+  try{
+    const response=await fetch('/api/ai/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message:message})
+    });
+
+    const raw=await response.text();
+    let data={};
+    try{data=raw?JSON.parse(raw):{};}
+    catch(e){throw new Error('Server ne valid JSON response nahi diya. Render Logs check karein.');}
+
+    if(!response.ok){
+      throw new Error(data.error||data.message||('Server error: '+response.status));
+    }
+
+    const answer=
+      data.reply||
+      data.text||
+      data.response||
+      data.answer||
+      data.candidates?.
+     [0]?.content?.parts?.map(p=>p.text||'').join('\n')||
+      '';
+
+    if(!answer)throw new Error('AI ka response khaali aaya. Server route check karein.');
+    loading.textContent=answer;
+
+  }catch(error){
+    loading.classList.add('error');
+    loading.textContent='AI connection error: '+(error.message||'Please try again.');
+    console.error('Ashish AI error:',error);
+  }finally{
+    sendBtn.disabled=false;
+    $('chatLog').scrollTop=$('chatLog').scrollHeight;
+  }
+}
+function quickAsk(message){
+  $('aiInput').value=message;
+  sendAI();
+}
+$('aiInput').addEventListener('keydown',event=>{
+  if(event.key==='Enter'&&!event.shiftKey){
+    event.preventDefault();
+    sendAI();
+  }
+});
+
+/* DAILY QUOTES */
+const quotes=[
+  'The secret of getting ahead is getting started.',
+  'Small steps every day lead to big results.',
+  'Your future is created by what you do today.',
+  'Dream big. Study hard. Stay consistent.',
+  'Success begins with self-discipline.',
+  'Focus on progress, not perfection.'
+];
+const dayNumber=Math.floor(Date.now()/86400000);
+$('quote').textContent='“'+quotes[dayNumber%quotes.length]+'”';
+</script>
+
+</body>
+</html>
